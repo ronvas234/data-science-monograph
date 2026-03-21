@@ -69,3 +69,33 @@ def confusion_matrix(target, predicted, perc=False):
     else:
         sns.heatmap(confusion_matrix, annot=True, fmt='d')
     plt.show()
+
+def load_pretrained_submatrix(model, checkpoint_path):
+    """
+    Transfer learning por submatriz: copia pesos del checkpoint en el nuevo modelo.
+    Funciona tanto si el nuevo modelo es mas pequeno como mas grande que el pre-entrenado:
+    - Copia min(filas_src, filas_dst) x min(cols_src, cols_dst)
+    - Las filas/cols extra del nuevo modelo conservan su init aleatoria (Xavier)
+    """
+    ckpt = torch.load(checkpoint_path, map_location='cpu')
+
+    def copy_sub(src_state, dst_module):
+        dst_state = dst_module.state_dict()
+        new_state = {}
+        for key in dst_state:
+            src = src_state[key]
+            dst = dst_state[key].clone()  # conserva init aleatoria para dims nuevas
+            if src.dim() == 2:
+                r = min(src.shape[0], dst.shape[0])
+                c = min(src.shape[1], dst.shape[1])
+                dst[:r, :c] = src[:r, :c]
+            elif src.dim() == 1:
+                r = min(src.shape[0], dst.shape[0])
+                dst[:r] = src[:r]
+            new_state[key] = dst
+        dst_module.load_state_dict(new_state)
+
+    copy_sub(ckpt['encoder'],  model.encoder)
+    copy_sub(ckpt['decoder1'], model.decoder1)
+    copy_sub(ckpt['decoder2'], model.decoder2)
+    return model
