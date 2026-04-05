@@ -1,0 +1,29 @@
+Elemento Común: Organización y División de los Datos
+A partir de tu último audio, queda claro que hay una estructura estandarizada que se aplicó a ambos planes (Plan A y Plan B) para garantizar que los modelos se evalúen bajo las mismas condiciones.
+
+La Columna split: Se agregó esta nueva columna en ambos datasets para clasificar cada observación.
+
+Categorías de partición:
+
+E: Datos de Entrenamiento (Training).
+
+V: Datos de Validación (Validation).
+
+T: Datos de Prueba (Test).
+
+Propósito: Asegurar que tanto tú como tu compañera tengan exactamente la misma estructura base ("el mismo split") para todos los procesos.
+
+Próximos pasos: Con esta partición lista, tu compañera se enfocará en aplicar las arquitecturas de redes neuronales recurrentes recomendadas por el profesor, específicamente modelos como LSTM (Long Short-Term Memory) y GRU (Gated Recurrent Unit).
+
+Plan A: Enfoque de Ventana de Tiempo Limpia
+Este plan está diseñado para facilitar la ingesta del modelo de tu compañero Ronald, entregando los datos de forma tradicional y evitando el uso de "máscaras".
+
+Objetivo: Encontrar una ventana de tiempo específica en el 2023 con la menor cantidad de anomalías posibles a través de las cuatro estaciones (68-Jardín Botánico, 203-UNAL, 478-Fiscalía, 201-Torre SIATA).
+
+Entrenamiento y Validación (E y V): * Corresponde al periodo entre finales de marzo y finales de abril.
+
+Es la ventana más "limpia" que se logró conseguir. Aunque tiene algunos pocos puntos anómalos, permite que el modelo aprenda el comportamiento regular de la temperatura sin contaminarse.
+
+Datos de Prueba (T): * Corresponde al periodo entre principios de junio y principios de julio.
+
+Aquí es donde ocurre el "estrés" del modelo. La estación 203 (UNAL) presenta múltiples fallas y una alta concentración de anomalías, lo que lo convierte en el escenario ideal para evaluar la capacidad de detección de la red.

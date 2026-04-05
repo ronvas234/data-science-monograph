@@ -115,38 +115,3 @@ def testing(model, test_loader, alpha=.5, beta=.5):
             w2=model.decoder2(model.encoder(w1))
             results.append(alpha*torch.mean((batch-w1)**2,axis=1)+beta*torch.mean((batch-w2)**2,axis=1))
     return results
-
-def load_pretrained_submatrix(model, checkpoint_path):
-    """
-    Inicializa un UsadModel mas pequeno copiando las submatrices superiores-izquierdas
-    de un checkpoint pre-entrenado (transfer learning por submatriz).
-
-    Requiere que todas las dimensiones del nuevo modelo sean <= a las del modelo
-    pre-entrenado. Para cada capa lineal, copia W_new = W_pretrained[:out_new, :in_new]
-    y bias_new = bias_pretrained[:out_new].
-
-    Args:
-        model: instancia de UsadModel con las nuevas dimensiones (mas pequenas)
-        checkpoint_path: ruta al archivo .pth con claves 'encoder', 'decoder1', 'decoder2'
-
-    Returns:
-        model con pesos inicializados desde el checkpoint pre-entrenado
-    """
-    ckpt = torch.load(checkpoint_path, map_location='cpu')
-
-    def copy_sub(src_state, dst_module):
-        dst_state = dst_module.state_dict()
-        new_state = {}
-        for key in dst_state:
-            src = src_state[key]
-            dst = dst_state[key]
-            if src.dim() == 2:
-                new_state[key] = src[:dst.shape[0], :dst.shape[1]].clone()
-            elif src.dim() == 1:
-                new_state[key] = src[:dst.shape[0]].clone()
-        dst_module.load_state_dict(new_state)
-
-    copy_sub(ckpt['encoder'],  model.encoder)
-    copy_sub(ckpt['decoder1'], model.decoder1)
-    copy_sub(ckpt['decoder2'], model.decoder2)
-    return model
