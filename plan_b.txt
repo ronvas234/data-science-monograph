@@ -1,0 +1,33 @@
+Elemento Común: Organización y División de los Datos
+A partir de tu último audio, queda claro que hay una estructura estandarizada que se aplicó a ambos planes (Plan A y Plan B) para garantizar que los modelos se evalúen bajo las mismas condiciones.
+
+La Columna split: Se agregó esta nueva columna en ambos datasets para clasificar cada observación.
+
+Categorías de partición:
+
+E: Datos de Entrenamiento (Training).
+
+V: Datos de Validación (Validation).
+
+T: Datos de Prueba (Test).
+
+Propósito: Asegurar que tanto tú como tu compañera tengan exactamente la misma estructura base ("el mismo split") para todos los procesos.
+
+Próximos pasos: Con esta partición lista, tu compañera se enfocará en aplicar las arquitecturas de redes neuronales recurrentes recomendadas por el profesor, específicamente modelos como LSTM (Long Short-Term Memory) y GRU (Gated Recurrent Unit).
+
+Plan B: Enfoque de Año Completo con Enmascaramiento (Masking)
+Este plan ofrece más libertad en la arquitectura de la red neuronal al abarcar un periodo mucho más amplio, utilizando técnicas de Keras para lidiar con los datos "malos" durante el aprendizaje.
+
+Objetivo: Utilizar la totalidad de los datos del año 2023 y aplicar una técnica de enmascaramiento para que el modelo ignore las anomalías durante su fase de aprendizaje.
+
+Homogeneización de la Serie: Para lidiar con los huecos de información, se estableció una regla: si a una estación le falta un dato en un instante de tiempo, se elimina ese mismo instante en las otras tres estaciones. Esto garantiza que las cuatro series estén perfectamente sincronizadas.
+
+La Técnica de la Máscara: * Se creó una columna adicional llamada T_mask.
+
+Cualquier dato anómalo se reemplaza por un valor señuelo de -2000.
+
+En la arquitectura del modelo (usando tf.keras.layers.Masking), se configura la red para que ignore por completo los registros que contengan ese valor (-2000).
+
+Aplicación Selectiva: * La máscara de -2000 solo se aplica a las observaciones marcadas como Entrenamiento (E) y Validación (V).
+
+Los datos de Prueba (T) se dejan intactos (sin enmascarar). Al final de la gráfica (agosto - septiembre), la estación 203 (UNAL) tiene una falla masiva. Al no tener máscara en esta sección, se convierte en la prueba de fuego para que el modelo entrenado logre detectar todo ese bloque anómalo por sí solo.
