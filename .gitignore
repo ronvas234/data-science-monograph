@@ -1,1 +1,4 @@
 .DS_Store
+
+# Notebooks con outputs pesados (>100 MB — excede límite de GitHub)
+modelos/usad/Monografia_S_RNN_Mask.ipynb
